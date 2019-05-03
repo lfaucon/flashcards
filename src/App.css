@@ -1,32 +1,126 @@
 .App {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  max-width: 600px;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
+#config {
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+  text-align: left;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+#config span {
+  margin-top: 16px;
+}
+
+#header {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  font-size: 24px;
+  color: #311;
+  font-weight: bold;
+  padding: 8px;
+  border-bottom: 4px solid #311;
+}
+
+#flashcard {
+  flex: 1;
+  perspective: 1000;
+  padding: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#controls {
+  flex: 0 0 auto;
+  padding: 4px;
+  display: flex;
+  justify-content: stretch;
+  align-items: center;
+}
+
+#stats {
+  flex: 0 0 50px;
+  background-color: #999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button {
+  flex: 1 1 0px;
+  transition: 0.3s;
+  font-size: 120%;
+  font-weight: bold;
+  color: white;
+  border-radius: 4px;
+  border: none;
+  background-color: #533;
+  padding: 12px;
+  margin: 4px;
+  box-shadow: 0px 4px 8px -1px #333;
+}
+
+.button:active {
+  background-color: #fdd;
+}
+
+.showFront,
+.showBack {
+  height: 100%;
+  width: 100%;
+  transition: 0.7s;
+  transform-style: preserve-3d;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff0;
+}
+
+.showFront {
+  transform: rotateY(0deg);
+}
+
+.showFront {
+  transform: rotateY(-180deg);
+}
+
+.front,
+.back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 32px;
+  text-align: center;
+  backface-visibility: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  box-shadow: 0px 5px 10px -1px #333;
 }
 
-.App-link {
-  color: #61dafb;
+.front {
+  color: #311;
+  z-index: 2;
+  background: #eaa;
+  font-size: 32px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.back {
+  transform: rotateY(-180deg);
+  color: #fdd;
+  background: #533;
+  font-size: 32px;
 }
