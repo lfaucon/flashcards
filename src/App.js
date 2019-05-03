@@ -1,7 +1,26 @@
 import React, { Component, useState } from "react";
 import "./App.css";
 
-const Controls = ({ turned, turn, next, answer, cards }) => {
+const importance = (date, count) => {
+  const x = (new Date() - new Date(date)) / 1.5 ** count;
+  return Number.isNaN(x) ? 1e6 : x;
+};
+
+const shuffle = array => {
+  var currentIndex = array.length,
+    temporaryValue,
+    randomIndex;
+  while (0 !== currentIndex) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+  return array;
+};
+
+const Controls = ({ turned, turn, next, answer, cards, cardIndex }) => {
   if (!cards || cards.length === 0) {
     return (
       <div id="controls">
@@ -38,18 +57,21 @@ const Controls = ({ turned, turn, next, answer, cards }) => {
   );
 };
 
-const FlashCard = ({ turned, card }) => (
-  <div id="flashcard">
-    <div className={turned ? "showFront" : "showBack"}>
-      <div className="front">
-        <span>{card && card.front}</span>
-      </div>
-      <div className="back">
-        <span>{card && card.back}</span>
+const FlashCard = ({ turned, card }) => {
+  const [front, back] = (card && shuffle([card.front, card.back])) || ["", ""];
+  return (
+    <div id="flashcard">
+      <div className={turned ? "showFront" : "showBack"}>
+        <div className="front">
+          <span>{front}</span>
+        </div>
+        <div className="back">
+          <span>{back}</span>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 const Header = ({ openConfig }) => (
   <div id="header">
@@ -67,17 +89,19 @@ const getCards = config => {
   }
 };
 
-const ConfigPanel = ({ toggleConfig, cards }) => {
+const ConfigPanel = ({ toggleConfig, cards, setCards }) => {
   const [front, setFront] = useState("");
   const [back, setBack] = useState("");
 
   const addCard = () => {
     if (front === "" || back === "") return;
-    const newCard = { front, back };
+    const newCard = { front, back, lastSeenAt: new Date(), count: 1 };
     const newCards = [...cards, newCard];
     localStorage.setItem("lpfaucon.flashcards.cards", JSON.stringify(newCards));
     toggleConfig();
+    setCards(newCards);
   };
+
   return (
     <div id="config">
       <span>Front:</span>
@@ -103,43 +127,65 @@ class App extends Component {
 
   componentDidMount() {
     const cards = getCards();
-    const randIndex = Math.floor(Math.random() * cards.length);
-    this.setState({
-      cards,
-      card: cards[randIndex]
-    });
+    const cardIndex = Math.floor(Math.random() * cards.length);
+    this.setState({ cards, cardIndex });
   }
 
   next = () =>
     this.setState(s => {
-      const randIndex = Math.floor(Math.random() * s.cards.length);
-      setTimeout(() => this.setState({ card: s.cards[randIndex] }), 500);
+      const { cards } = s;
+      const cardIndex = cards.reduce((_max, c, idx) => {
+        const { lastSeenAt, count } = c;
+        const { lastSeenAt: da, count: co } = cards[_max];
+        const better = importance(lastSeenAt, count) > importance(da, co);
+        return better ? idx : _max;
+      }, 0);
+      setTimeout(() => this.setState({ cardIndex }), 500);
       return {
         turned: false,
-        card: undefined,
+        cardIndex: undefined,
         answered: false
       };
     });
+
+  handleRecall = wasCorrect => {
+    const { cards, cardIndex } = this.state;
+    const newCards = [...cards];
+    newCards[cardIndex].lastSeenAt = new Date();
+    if (wasCorrect) {
+      newCards[cardIndex].count = (newCards[cardIndex].count || 1) + 1;
+    } else {
+      newCards[cardIndex].count = 1;
+    }
+    localStorage.setItem("lpfaucon.flashcards.cards", JSON.stringify(newCards));
+    this.setState({ cards: newCards });
+  };
 
   turn = () => this.setState(s => ({ turned: !s.turned }));
   toggleConfig = () => this.setState(s => ({ configOpen: !s.configOpen }));
 
   render() {
-    const { configOpen } = this.state;
+    const { configOpen, cards, cardIndex } = this.state;
     return (
       <div className="App">
         <Header openConfig={this.toggleConfig} />
-        {!configOpen && <FlashCard {...this.state} />}
+        {!configOpen && (
+          <FlashCard {...this.state} card={cards && cards[cardIndex]} />
+        )}
         {!configOpen && (
           <Controls
             {...this.state}
             turn={this.turn}
             next={this.next}
-            answer={wasCorrect => {}}
+            answer={this.handleRecall}
           />
         )}
         {configOpen && (
-          <ConfigPanel {...this.state} toggleConfig={this.toggleConfig} />
+          <ConfigPanel
+            {...this.state}
+            toggleConfig={this.toggleConfig}
+            setCards={c => this.setState({ cards: c })}
+          />
         )}
       </div>
     );
