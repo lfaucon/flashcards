@@ -6,20 +6,6 @@ const importance = (date, count) => {
   return Number.isNaN(x) ? 1e6 : x;
 };
 
-const shuffle = array => {
-  var currentIndex = array.length,
-    temporaryValue,
-    randomIndex;
-  while (0 !== currentIndex) {
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex -= 1;
-    temporaryValue = array[currentIndex];
-    array[currentIndex] = array[randomIndex];
-    array[randomIndex] = temporaryValue;
-  }
-  return array;
-};
-
 const Controls = ({ turned, turn, next, answer, cards, cardIndex }) => {
   if (!cards || cards.length === 0) {
     return (
@@ -58,7 +44,7 @@ const Controls = ({ turned, turn, next, answer, cards, cardIndex }) => {
 };
 
 const FlashCard = ({ turned, card }) => {
-  const [front, back] = (card && shuffle([card.front, card.back])) || ["", ""];
+  const [front, back] = (card && [card.front, card.back]) || ["", ""];
   return (
     <div id="flashcard">
       <div className={turned ? "showFront" : "showBack"}>
