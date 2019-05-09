@@ -1,13 +1,13 @@
 {
-  "main.css": "/flashcards/static/css/main.626c5a52.chunk.css",
-  "main.js": "/flashcards/static/js/main.8e634ee0.chunk.js",
-  "main.js.map": "/flashcards/static/js/main.8e634ee0.chunk.js.map",
-  "static/js/1.3606a884.chunk.js": "/flashcards/static/js/1.3606a884.chunk.js",
-  "static/js/1.3606a884.chunk.js.map": "/flashcards/static/js/1.3606a884.chunk.js.map",
+  "main.css": "/flashcards/static/css/main.0080a65d.chunk.css",
+  "main.js": "/flashcards/static/js/main.a4e3fe19.chunk.js",
+  "main.js.map": "/flashcards/static/js/main.a4e3fe19.chunk.js.map",
+  "static/js/1.6c40bc8f.chunk.js": "/flashcards/static/js/1.6c40bc8f.chunk.js",
+  "static/js/1.6c40bc8f.chunk.js.map": "/flashcards/static/js/1.6c40bc8f.chunk.js.map",
   "runtime~main.js": "/flashcards/static/js/runtime~main.bf0c7529.js",
   "runtime~main.js.map": "/flashcards/static/js/runtime~main.bf0c7529.js.map",
-  "static/css/main.626c5a52.chunk.css.map": "/flashcards/static/css/main.626c5a52.chunk.css.map",
+  "static/css/main.0080a65d.chunk.css.map": "/flashcards/static/css/main.0080a65d.chunk.css.map",
   "index.html": "/flashcards/index.html",
-  "precache-manifest.23169513de46d39ac37e2e1a83f386a1.js": "/flashcards/precache-manifest.23169513de46d39ac37e2e1a83f386a1.js",
+  "precache-manifest.f58c651d60da76d9d609c546184399a6.js": "/flashcards/precache-manifest.f58c651d60da76d9d609c546184399a6.js",
   "service-worker.js": "/flashcards/service-worker.js"
 }
